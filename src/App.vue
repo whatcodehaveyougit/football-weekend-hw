@@ -1,17 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p class="">From App</p>
+    <teams-list :teams="teams"></teams-list>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import TeamsList from './components/TeamsList.vue'
+// import TeamsListItem from './components/TeamsListItem.vue'
 
 export default {
   name: 'app',
+  data() {
+    // Need to return Data
+    return {
+      teams: []
+    }
+  },
+  mounted() {
+    fetch('http://api.football-data.org/v2/competitions/2000/teams', {
+    headers: {
+      // Causse of dashes it wants quotes
+      "X-Auth-Token": "f9ca195aca3c4f19935355ac2e0f1f02"
+    }
+  })
+    .then(response => response.json())
+    .then(teams => this.teams = teams.teams)
+  },
   components: {
-    HelloWorld
+    "teams-list": TeamsList,
+    // "teams-list-item": TeamsListItem
   }
 }
 </script>
@@ -19,10 +38,6 @@ export default {
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
