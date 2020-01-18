@@ -1,18 +1,26 @@
 <template lang="html">
-  <section>
-    <li>{{ team.name }}</li>
-    <p>From Teams List Item</p>
+<!-- Put in this v-if so it would not try to access <thead>
+  name unless there was data in it
+ -->
+  <section v-if="team">
+    <li v-on:click="handleClick">{{ team.name }}</li>
   </section>
 </template>
 
 <script>
 
-// Give the top of the file stuff
+import { eventBus } from '../main.js';
+
 export default {
-  name: 'team-list-item',
-  // Data - Props is a single beer
-  props: ['team']
+  name: 'teams-list-item',
+  props: ['team'],
+  methods: {
+    handleClick() {
+    eventBus.$emit('team-selected', this.team)
+    }
+  }
 }
+
 </script>
 
 <style lang="css" scoped>

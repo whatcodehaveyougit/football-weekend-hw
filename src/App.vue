@@ -1,21 +1,29 @@
 <template>
   <div id="app">
-    <p class="">From App</p>
-    <teams-list :teams="teams"></teams-list>
+    <h1 class="">From App</h1>
+      <div class="content-container">
+        <teams-list :teams="teams"></teams-list>
+        <team-details class="team-details" :team="selectedTeam">
+        </team-details>
+        <!-- This :team is NOT a banana -->
+      </div>
   </div>
 </template>
 
 <script>
 
-import TeamsList from './components/TeamsList.vue'
-// import TeamsListItem from './components/TeamsListItem.vue'
+import TeamsList from './components/TeamsList.vue';
+import TeamsListItem from './components/TeamsListItem.vue';
+import TeamDetails from './components/TeamDetails.vue';
+import { eventBus } from './main.js';
 
 export default {
   name: 'app',
   data() {
-    // Need to return Data
+    // Must Return the data
     return {
-      teams: []
+      teams: [],
+      selectedTeam: null
     }
   },
   mounted() {
@@ -27,10 +35,16 @@ export default {
   })
     .then(response => response.json())
     .then(teams => this.teams = teams.teams)
+
+    eventBus.$on('team-selected', (team) => {
+      this.selectedTeam = team
+    })
   },
+  // These are the components which will help us construct the output at the top
   components: {
     "teams-list": TeamsList,
-    // "teams-list-item": TeamsListItem
+    "teams-list-item": TeamsListItem,
+    "team-details": TeamDetails
   }
 }
 </script>
@@ -38,6 +52,14 @@ export default {
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+.content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+h1 {
   text-align: center;
 }
 </style>
